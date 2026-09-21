@@ -1,0 +1,8 @@
+Amira Khan,1001,22.50,38
+Ben Osei,1002,19.75,42
+Chen Wei,1003,31.00,40
+Dana Ruiz,1004,18.25,45.5
+Ethan Park,1005,27.40,36
+Fatima Ali,1006,22.50,40
+Grace Ito,1007,35.10,48
+Hassan Diallo,1008,19.75,30
