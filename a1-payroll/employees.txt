@@ -1,0 +1,8 @@
+104,Amira Haddad,22.50,38
+105,Ben Oyelaran,19.75,44
+106,Chen Wei,25.00,46.5
+107,Dana Kowalczyk,17.20,52
+108,Eli Fontaine,31.00,40
+109,Fatima Noor,19.75,0
+110,Gabriel Santos,45.00,44
+111,Hana Ito,17.20,36.25
