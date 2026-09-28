@@ -1,3 +1,10 @@
+/*
+ * ICS4U Assignment 1 Employee Payroll Records
+ * Student Name: Oscar Zhu
+ * Reads employee data, calculates payroll and prints
+ * The report, summary, and lookup
+ */
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,11 +20,50 @@ public class Payroll {
     private static final double HIGH_TAX_RATE = 0.20;
 
     /**
+     * Runs the payroll program.
+     * Precondition: none.
+     *
+     * @param args command line arguments
+     */
+    public static void main(String[] args) {
+        int[] ids = new int[MAX_EMPLOYEES];
+        String[] names = new String[MAX_EMPLOYEES];
+        double[] rates = new double[MAX_EMPLOYEES];
+        double[] hours = new double[MAX_EMPLOYEES];
+        double[] gross = new double[MAX_EMPLOYEES];
+        double[] net = new double[MAX_EMPLOYEES];
+        int count = readEmployees("employees.txt", ids, names, rates, hours);
+        if (count == 0) {
+            System.out.println("Could not read employees.txt. Check that it's in the project folder.");
+            return;
+        }
+        for (int i = 0; i < count; i++) {
+            gross[i] = grossPay(rates[i], hours[i]);
+            double totalDeductions = deductions(gross[i]);
+            net[i] = netPay(gross[i], totalDeductions);
+        }
+        printReport(ids, names, gross, net, count);
+        printSummary(gross, net, count);
+        System.out.println();
+        System.out.println("LOOKUP");
+        int index107 = findById(ids, count, 107);
+        if (index107 != -1) {
+            System.out.printf("Employee 107: %s, net pay %.2f%n", names[index107], net[index107]);
+        }
+        int index999 = findById(ids, count, 999);
+        if (index999 == -1) {
+            System.out.println("Employee 999: not found");
+        }
+        int highestIndex = highestNetPayIndex(net, count);
+        System.out.printf("Highest net pay: %s (%d), %.2f%n", names[highestIndex], ids[highestIndex], net[highestIndex]);
+    }
+
+    /**
      * Calculates the gross pay for one employee, including overtime.
      * Precondition: rate > 0 and hoursWorked >= 0.
      * Postcondition: returns the gross pay in dollars and changes nothing.
      *
-     * @param rate the employee's hourly rate in dollars
+     * @param rate        the employee's hourly rate in dollars
      * @param hoursWorked the number of hours worked this week
      * @return the employee's gross pay in dollars
      */
@@ -67,7 +113,7 @@ public class Payroll {
      * Calculates the employee's net pay after deductions.
      * Precondition: gross >= 0, totalDeductions >= 0, and totalDeductions <= gross.
      *
-     * @param gross the employee's gross pay in dollars
+     * @param gross           the employee's gross pay in dollars
      * @param totalDeductions the employee's total deductions in dollars
      * @return the employee's net pay in dollars
      */
@@ -82,8 +128,8 @@ public class Payroll {
      * Postcondition: returns the index of the first matching ID, or -1 if no match is found.
      * The ids array is unchanged.
      *
-     * @param ids the array of employee IDs
-     * @param count the number of valid entries in ids
+     * @param ids    the array of employee IDs
+     * @param count  the number of valid entries in ids
      * @param target the employee ID to find
      * @return the index of the first matching ID, or -1 if not found
      */
@@ -100,10 +146,11 @@ public class Payroll {
      * Finds the employee with the highest net pay
      * Precondition: count > 0 and count <= net.length
      * Postcondition: returns an index from 0 to count -1, and the net array is unchanged.
-     * @param net the array of employee net pay values
+     *
+     * @param net   the array of employee net pay values
      * @param count the number of valid entries in net
      * @return the index of the employee with the highest net pay
-     * @throws IllegalArgumentException, if count <= 0.
+     * @throws IllegalArgumentException if count <= 0.
      */
     public static int highestNetPayIndex(double[] net, int count) {
         if (count <= 0) {
@@ -123,6 +170,7 @@ public class Payroll {
      * Calculates the average gross pay of the employees.
      * Precondition: count > 0 and count <= gross.length.
      * Postcondition: returns the average of the first count gross pay values and the gross array is unchanged.
+     *
      * @param gross the array of employee gross pay values
      * @param count the number of valid entries in gross.
      * @return the average gross pay in dollars.
@@ -144,10 +192,10 @@ public class Payroll {
      * Precondition: count >= 0, and the arrays contain matching employee data for indexes 0 to count -1.
      * Postcondition: prints the report and does not change any array.
      *
-     * @param ids the array of employee IDs
+     * @param ids   the array of employee IDs
      * @param names the array of employee names
-     * @param gross the array of employee net pay values
-     * @param net the array of employee net pay values
+     * @param gross the array of employee gross pay values
+     * @param net   the array of employee net pay values
      * @param count the number of valid employee entries
      */
 
@@ -155,7 +203,7 @@ public class Payroll {
         System.out.printf("%-6s %-18s %12s %12s %12s%n", "ID", "NAME", "GROSS", "DEDUCTIONS", "NET");
         System.out.println("----------------------------------------------------------------");
         for (int i = 0; i < count; i++) {
-            System.out.printf("%-6d, %-18s %12.2f %12.2f %12.2f%n", ids[i], names[i], gross[i], deductions(gross[i]), net[i]);
+            System.out.printf("%-6d %-18s %12.2f %12.2f %12.2f%n", ids[i], names[i], gross[i], deductions(gross[i]), net[i]);
         }
     }
 
@@ -165,7 +213,7 @@ public class Payroll {
      * Postcondition: Prints the summary section and does not change either array.
      *
      * @param gross the array of employee gross pay values
-     * @param net the array of employee net pay values
+     * @param net   the array of employee net pay values
      * @param count the number of valid employee entries
      */
 
@@ -176,12 +224,12 @@ public class Payroll {
         double totalNet = 0.0;
         for (int i = 0; i < count; i++) {
             totalGross += gross[i];
-            totalNet = +net[i];
+            totalNet += net[i];
         }
         double averageGross = averageGrossPay(gross, count);
         int highestIndex = highestNetPayIndex(net, count);
         double highestNet = net[highestIndex];
-        System.out.printf("%-22s %10d %n", "Employees:", count);
+        System.out.printf("%-22s %10d%n", "Employees:", count);
         System.out.printf("%-22s %10.2f%n", "Total gross pay:", totalGross);
         System.out.printf("%-22s %10.2f%n", "Total net pay:", totalNet);
         System.out.printf("%-22s %10.2f%n", "Average gross pay:", averageGross);
@@ -192,11 +240,12 @@ public class Payroll {
      * Reads employee records from a file into four parallel arrays.
      * Precondition: The four arrays have the same length and are large enough to hold all valid employee records.
      * Postcondition: Fills indexes 0 to count -1 of each array and returns the number of valid employees read. Invalid lines are not stored or counted.
+     *
      * @param fileName the name of the employee data file
-     * @param ids the array for employee IDs.
-     * @param names the array for employee names
-     * @param rates the array for employee hourly rates
-     * @param hours the array for employee hours worked
+     * @param ids      the array for employee IDs.
+     * @param names    the array for employee names
+     * @param rates    the array for employee hourly rates
+     * @param hours    the array for employee hours worked
      * @return the number of valid employees successfully read
      */
     public static int readEmployees(String fileName, int[] ids, String[] names, double[] rates, double[] hours) {

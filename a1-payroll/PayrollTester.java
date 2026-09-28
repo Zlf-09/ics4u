@@ -1,4 +1,15 @@
+/*
+ * ICS4U Assignment 1 Payroll Tester
+ * Student Name: Oscar Zhu
+ * Tests the methods in Payroll.java.
+ */
+
 public class PayrollTester {
+    /**
+     * Runs the payroll tests.
+     * Precondition: none.
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         double expected1 = 855.0;
         double actual1 = Payroll.grossPay(22.50, 38);
@@ -90,7 +101,7 @@ public class PayrollTester {
         try {
             Payroll.highestNetPayIndex(testNet, 0);
             System.out.println("Fail - no exception was thrown");
-        }catch (IllegalArgumentException e ) {
+        } catch (IllegalArgumentException e) {
             System.out.println("Pass - IllegalArgumentException was thrown");
         }
         System.out.println();
@@ -100,25 +111,25 @@ public class PayrollTester {
         try {
             Payroll.averageGrossPay(testGross, 0);
             System.out.println("Fail - no exception was thrown");
-        }catch (IllegalArgumentException e ){
+        } catch (IllegalArgumentException e) {
             System.out.println("Pass - IllegalArgumentException was thrown");
         }
         System.out.println();
-        int [] badIds = new int[50];
+        int[] badIds = new int[50];
         String[] badNames = new String[50];
         double[] badRates = new double[50];
         double[] badHours = new double[50];
         int expected14 = 2;
-        int actual14 = Payroll.readEmployees("a1-payroll/employees-bad.txt", badIds, badNames, badHours, badHours);
+        int actual14 = Payroll.readEmployees("employees-bad.txt", badIds, badNames, badRates, badHours);
         System.out.println("Test 14 - readEmployees skips bad lines");
         System.out.println("Expected: " + expected14);
         System.out.println("Actual: " + actual14);
-        System.out.println(actual14 == expected14? "Pass" : "Fail");
+        System.out.println(actual14 == expected14 ? "Pass" : "Fail");
         System.out.println();
 
         double[] customNet1 = {500.0, 700.0, 600.0};
         int expected15 = 1;
-        int actual15 = Payroll.highestNetPayIndex(customNet1,3);
+        int actual15 = Payroll.highestNetPayIndex(customNet1, 3);
         System.out.println("Test 15 - highestNetPayIndex normal case");
         System.out.println("Expected: " + expected15);
         System.out.println("Actual: " + actual15);
@@ -127,7 +138,7 @@ public class PayrollTester {
 
         double[] customNet2 = {700.0, 700.0, 600.0};
         int expected16 = 0;
-        int actual16 = Payroll.highestNetPayIndex(customNet2,3);
+        int actual16 = Payroll.highestNetPayIndex(customNet2, 3);
         System.out.println("Test 16 - highestNetPayIndex tie returns first");
         System.out.println("Expected: " + expected16);
         System.out.println("Actual: " + actual16);
