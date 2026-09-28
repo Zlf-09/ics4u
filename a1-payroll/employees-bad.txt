@@ -1,0 +1,7 @@
+201,Test Employee,20.00,40
+202,Bad Fields,18.00
+203,Bad Number,abc,35
+204,Zero Rate,0,20
+205,Negative Hours,25.00,-3
+
+206,Another Good Employee,30.00,44
