@@ -17,3 +17,4 @@
 | 14 | readEmployees      | employees-bad.txt   | count = 2  | count = 2  | Pass   |
 | 15 | highestNetPayIndex | {500, 700, 600}     | index 1    | index 1    | Pass   |
 | 16 | highestNetPayIndex | {700, 700, 600}     | index 0    | index 0    | Pass   |
+Tests 1 to 14 are the required tests. Tests 15 to 16 are additional tests.
