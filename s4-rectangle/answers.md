@@ -1,0 +1,6 @@
+# Session 4 Homework Answers
+## Q1 answer: If width were static, all Rectangle objects would share the same width, so changing or creating one rectangle could affect the width used by the others. If created were not static, each Rectangle would have its own separate counter instead of one total count for all rectangles.
+## Q2 answer: The constructor is called seven times, but only four Rectangle objects are created successfully because the three invalid ones throw an IllegalArgumentException before being counted. The line created++ must come last in the constructor, after the validation has passed.
+## Q3 answer: The program would not compile if static were removed because getCreated() is called using Rectangle.getCreated(). Without static, it would need to be called through a Rectangle object. Static is better because created belongs to the whole Rectangle class, not to one specific Rectangle object.
+## Q4 answer: isSquare() uses TOLERANCE because double values may have small rounding errors. For rectangle d, 0.1+0.2 is not exactly equal to 0.3, but the difference is very small, so isSquare() correctly returns true.
+## Q5 answer: Using this(side,side) can keep the validation in one place. If the validation were copied into both constructors, one version could be changed later while the other is forgotten, causing inconsistent behavior.
