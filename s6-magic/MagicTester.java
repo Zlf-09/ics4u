@@ -100,7 +100,7 @@ public class MagicTester {
             });
             System.out.println("FAIL: no exception");
         } catch (IllegalArgumentException e) {
-            System.out.println("!3. jagged rejected: " + e.getMessage());
+            System.out.println("13. jagged rejected: " + e.getMessage());
         }
     }
 }
