@@ -2,8 +2,8 @@
 classDiagram
     class Borrowable {
         <<interface>>
-        +loanPeriodDays() int
-        +dailyLateFee() double
+        +loanPeriodDays() int*
+        +dailyLateFee() double*
         +lateFee(daysLate: int) double
     }
     class LibraryItem {
@@ -107,13 +107,14 @@ classDiagram
         -findItem(id: String) LibraryItem
         -findMember(number: int) Member
         -findLoan(itemId: String) Loan
+        -removeLoan(itemId: String) void
         -countLoansForMember(memberNumber: int) int
     }
     Library "1" --> "0..100" LibraryItem: items
     Library "1" --> "0..50" Member: members
     Library "1" --> "0..100" Loan: loans
     class LibraryDemo {
-        -lib: Librarys$
+        -lib: Library$
         -borrow(member: int, id: String, day: int) void$
         -giveBack(id: String, day: int) void$
         -list(label: String, found: LibraryItem[]) void$
