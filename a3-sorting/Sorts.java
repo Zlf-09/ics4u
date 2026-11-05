@@ -8,6 +8,20 @@ import java.util.Arrays;
 
 public class Sorts {
     /**
+     * Counts comparisons between integer values during sorting.
+     * Reset to 0 before each run to measure that run separately.
+     */
+    public static long comparisons = 0;
+
+    /**
+     * Records one value comparison and returns whether x is greater than y.
+     */
+    private static boolean greater(int x, int y) {
+        comparisons++;
+        return x > y;
+    }
+
+    /**
      * Swaps the values at indices i and j
      * Precondition: a is not null, and i and j are valid indices
      *
@@ -49,7 +63,7 @@ public class Sorts {
         for (int i = 0; i < a.length - 1; i++) {
             int min = i;
             for (int j = i + 1; j < a.length; j++) {
-                if (a[j] < a[min]) {
+                if (greater(a[min], a[j])) {
                     min = j;
                 }
             }
@@ -70,7 +84,7 @@ public class Sorts {
         for (int i = 1; i < a.length; i++) {
             int key = a[i];
             int j = i - 1;
-            while (j >= 0 && a[j] > key) {
+            while (j >= 0 && greater(a[j], key)) {
                 a[j + 1] = a[j];
                 j--;
             }
@@ -113,7 +127,7 @@ public class Sorts {
         int j = 0;
         int k = 0;
         while (i < left.length && j < right.length) {
-            if (left[i] <= right[j]) {
+            if (!greater(left[i],right[j])) {
                 out[k] = left[i];
                 i++;
             } else {
