@@ -9,7 +9,11 @@ public class SortExperiment {
     public static final long SEED = 42;
 
     /**
-     * Returns a new array of n values: random (from seed), sorted, or reversed.
+     * Precondition: n >= 0; input is "random", "sorted", or "reversed".
+     * @param input the input order
+     * @param n the array length
+     * @param seed the random seed
+     * @return a new array of n values
      */
     public static int[] makeArray(String input, int n, long seed) {
         int[] a = new int[n];
@@ -69,6 +73,12 @@ public class SortExperiment {
         Arrays.sort(times);
         return times[times.length / 2] / 1_000_000.0;
     }
+
+    /**
+     * Warms up the sorts and prints all 72 experiment results as CSV.
+     * Precondition: Sorts provides all required sorting methods.
+     * @param args unused command-line arguments
+     */
 
     public static void main(String[] args) {
         for (String sort : SORTS) {

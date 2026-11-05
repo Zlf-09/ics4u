@@ -20,7 +20,7 @@ random arrays.
 
 For comparison counts, I reset Sorts.comparisons before a separate sorting run. The counter measured comparisons between
 integer values, including comparisons returning false, but excluded index checks. Arrays.sort comparisons were not
-measured and appear as NA in the CSV. The handwritten algorithms also updated their counters during timing, adding
+measured and are blank in the CSV. The handwritten algorithms also updated their counters during timing, adding
 overhead to their measurements.
 
 ## Results
@@ -39,16 +39,16 @@ overhead to their measurements.
 ### Median times and doubling ratios on random input
 
 Times are in milliseconds. Each ratio divides the current time by the time at half the array size. Times are displayed
-to three decimal places; ratios use the six-decimal CSV values.
+to three decimal places; ratios use the three-decimal CSV values.
 
 |     n | Selection ms | Ratio | Insertion ms | Ratio | Merge ms | Ratio | Arrays.sort ms | Ratio |
 |------:|-------------:|------:|-------------:|------:|---------:|------:|---------------:|------:|
-|  1000 |        1.923 |     — |        1.338 |     — |    0.207 |     — |          0.780 |     — |
-|  2000 |        2.178 |  1.13 |        0.483 |  0.36 |    0.202 |  0.98 |          0.540 |  0.69 |
-|  4000 |        6.839 |  3.14 |        3.091 |  6.40 |    0.513 |  2.53 |          0.341 |  0.63 |
-|  8000 |       24.685 |  3.61 |        8.983 |  2.91 |    1.005 |  1.96 |          1.044 |  3.06 |
-| 16000 |       88.213 |  3.57 |       28.217 |  3.14 |    1.790 |  1.78 |          0.817 |  0.78 |
-| 32000 |      320.181 |  3.63 |      108.153 |  3.83 |    4.374 |  2.44 |          1.843 |  2.25 |
+|  1000 |        1.285 |     — |        0.113 |     — |    0.066 |     — |          0.063 |     — |
+|  2000 |        9.606 |  7.48 |        0.436 |  3.86 |    0.197 |  2.98 |          0.165 |  2.62 |
+|  4000 |       26.531 |  2.76 |        1.700 |  3.90 |    0.389 |  1.97 |          0.346 |  2.10 |
+|  8000 |      128.103 |  4.83 |        6.874 |  4.04 |    0.822 |  2.11 |          0.736 |  2.13 |
+| 16000 |      326.501 |  2.55 |       27.177 |  3.95 |    1.918 |  2.33 |          1.717 |  2.33 |
+| 32000 |      643.377 |  1.97 |      119.693 |  4.40 |    3.874 |  2.02 |          2.984 |  1.74 |
 
 ![Median sorting time on random input](chart.png)
 
@@ -58,17 +58,18 @@ Complete measurements for all input types are in [results.csv](results.csv).
 
 ### 1. Doubling ratios
 
-Selection sort's final three ratios were 3.61, 3.57, and 3.63. They approached four without reaching it, broadly
-supporting quadratic growth. Its comparison counts approximately quadrupled with each doubling, providing clearer
-evidence than elapsed time.
+Selection sort's time ratios ranged from 1.97 to 7.48 and did not settle near four. Its final three ratios were 4.83,
+2.55, and 1.97. However, its comparison counts approximately quadrupled with each doubling of n, providing clearer
+evidence of quadratic growth than these variable timings.
 
-Insertion sort's ratios varied from 0.36 to 6.40. Its final ratio, 3.83, was close to four, but the measurements did not
-consistently settle near that value. Random-input comparison counts nevertheless grew approximately fourfold, supporting
-O (n²) average-case growth.
+Insertion sort's ratios ranged from 3.86 to 4.40, close to four. Doubling n therefore approximately quadrupled its
+running time. Its random-input comparison counts also grew approximately fourfold, supporting O (n²) average-case
+growth.
 
-Merge sort's final ratios were 1.96, 1.78, and 2.44. Arrays.sort's were 3.06, 0.78, and 2.25. Neither sequence settled
-consistently. Their final ratios were compatible with growth somewhat above two, as expected for n log n, but timing
-alone cannot establish a complexity class.
+Merge sort's final three ratios were 2.11, 2.33, and 2.02; Arrays.sort's were 2.13, 2.33, and 1.74. Merge sort's
+larger-input timings roughly doubled, broadly consistent with n log n growth, which predicts slightly more than twice
+the work when n doubles. Arrays.sort showed more variation, including a final ratio below two. Timing measurements alone
+cannot establish a complexity class.
 
 ### 2. Counts against the formulas
 
@@ -91,47 +92,47 @@ values generally moved past only part of the sorted section.
 
 ### 4. Same Big-O, different times
 
-At n = 32,000 on random input, selection sort took 320.181 ms and insertion sort took 108.153 ms. Selection therefore
-took about 2.96 times as long, although both have quadratic average-case growth.
+At n = 32,000 on random input, selection sort took 643.377 ms and insertion sort took 119.693 ms. Selection therefore
+took about 5.38 times as long, although both have O (n²) average-case growth.
 
-Selection always scans the remaining section. Insertion stops when it finds the correct position. Insertion made
-256,431,056 comparisons versus selection's 511,984,000. Different comparison counts, memory operations, and
-implementation costs explain why equal Big-O classifications do not imply equal times.
+Selection always scans the remaining unsorted section. Insertion stops when it finds the correct position. Insertion
+made 256,431,056 comparisons versus selection's 511,984,000. Different comparison counts, memory operations, and
+implementation costs explain why equal Big-O classifications do not imply equal running times.
 
 ### 5. Arrays.sort compared with merge sort
 
-Arrays.sort was faster at 4,000, 16,000, and 32,000 random elements, while merge sort was faster at 1,000, 2,000, and
-8,000. At n = 32,000, Arrays.sort took 1.843 ms versus merge's 4.374 ms, approximately 57.9% less time.
+In this run, Arrays.sort was faster at all six tested random-input sizes. At n = 32,000, Arrays.sort took 2.984 ms
+versus merge sort's 3.874 ms, approximately 23.0% less time.
 
 A library implementation can use specialized strategies to reduce overhead. My merge sort allocates and copies temporary
-arrays and updates a comparison counter. These costs help explain the difference, although the experiment does not
-isolate their individual effects.
+arrays and updates a comparison counter, while Arrays.sort does not update that counter. These factors may contribute to
+the measured difference, although the experiment does not isolate their individual effects. These results compare the
+tested implementations under this experiment's conditions.
 
 ## Limits
 
-One irregularity was insertion sort's random-input time falling from 1.338208 ms at n = 1,000 to 0.482875 ms at n =
-2,000. A larger array taking less time suggests substantial timing variation, potentially involving compilation or
-background activity. More warm-up runs and repeated benchmark sessions would improve confidence.
+One irregularity was selection sort's random-input time increasing from 1.285 ms at n = 1,000 to 9.606 ms at n = 2,000,
+a ratio of 7.48 rather than approximately four. Compilation, background activity, and processor conditions may affect
+timings. More warm-up runs and repeated benchmark sessions would improve confidence.
 
-Another irregularity was Arrays.sort's reversed-input time falling from 0.118666 ms at n = 4,000 to 0.008375 ms at n =
-8,000. This does not establish that larger arrays sort faster. Measuring batches of short sorts and reporting variation
-across repeated sessions would make such small timings more reliable.
+Another irregularity was Arrays.sort's sorted-input time falling from 0.056 ms at n = 4,000 to 0.034 ms at n = 8,000.
+This does not establish that larger arrays sort faster. Measuring batches of short sorts and reporting variation across
+repeated sessions would make such small timings more reliable. Rounding to three decimal places also limits precision
+for very short measurements.
 
 Only seed 42 was used. Several seeds would provide broader evidence. Counter overhead also limits fairness when
 comparing handwritten sorts with Arrays.sort. Separate timing versions without counters would improve that comparison.
 
 ## Recommendation
 
-For large random arrays, I would choose Arrays.sort: at n = 32,000 it took 1.843 ms, compared with 4.374 ms for merge,
-108.153 ms for insertion, and 320.181 ms for selection. Among my handwritten algorithms, merge was strongest for large
-random inputs. For sorted input, insertion was particularly effective: 0.051375 ms versus merge's 1.669459 ms at n =
-32,000.
+For large random arrays, I would choose Arrays.sort: at n = 32,000 it took 2.984 ms, compared with 3.874 ms for merge,
+119.693 ms for insertion, and 643.377 ms for selection. Among my handwritten algorithms, merge was strongest for large
+random inputs. For sorted input, insertion was particularly effective: 0.056 ms versus merge's 1.255 ms at n = 32,000.
 
 My first prediction was correct: selection made 499,500 comparisons at n = 1,000 for every input order.
 
 My second prediction was correct among the handwritten sorts. At n = 32,000 on sorted input, insertion was fastest at
-0.051375 ms and selection slowest at 318.022791 ms.
-
-My third prediction received mixed timing support. Selection's last ratio was 3.63 rather than four, while its
-comparison counts approximately quadrupled. Merge's last ratio was 2.44, supporting slightly more than double the time
+0.056 ms and selection slowest at 421.072 ms.
+My third prediction received mixed timing support. Selection's last ratio was 1.97 rather than four, while its
+comparison counts approximately quadrupled. Merge's last ratio was 2.02, supporting slightly more than double the time
 for that interval, although earlier ratios varied.
